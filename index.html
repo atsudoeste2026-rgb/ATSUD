@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atividades AT-SUD</title>
+<meta name="description" content="Início e conclusão (RCO) das atividades de manutenção AT-SUD">
+<meta name="theme-color" content="#133f75">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icone-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AT-SUD">
+<script>
+  // >>> COLE AQUI O LINK DO APP (o que termina em /exec) <<<
+  var APP_URL = 'COLE_AQUI_O_LINK_EXEC';
+
+  // aberto pelo ícone da tela inicial: vai direto para o app
+  var configurado = /^https:\/\/script\.google\.com\/.+\/exec/.test(APP_URL);
+  var peloIcone = /[?&]app=1/.test(location.search) ||
+      (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if (configurado && peloIcone) location.replace(APP_URL);
+</script>
+<style>
+  :root { --primaria: #1d5fae; --primaria-escura: #133f75; --fundo: #eef2f7; --texto: #16202c; --suave: #5d6b7c; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; min-height: 100vh; background: var(--fundo); color: var(--texto); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
+  header { background: linear-gradient(135deg, var(--primaria-escura), var(--primaria) 60%, #2b7bd3); color: #fff; padding: 32px 16px 56px; text-align: center; border-radius: 0 0 28px 28px; }
+  header img { width: 128px; height: 128px; border-radius: 28px; background: #fff; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
+  header h1 { margin: 16px 0 4px; font-size: 24px; }
+  header p { margin: 0; opacity: .9; }
+  main { width: 100%; max-width: 520px; margin: -32px auto 0; padding: 0 16px 32px; }
+  .cartao { background: #fff; border-radius: 18px; padding: 20px 18px; box-shadow: 0 2px 10px rgba(16, 24, 40, .1); margin-bottom: 14px; }
+  .botao { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 54px; border: 0; border-radius: 14px; font: 800 17px system-ui, sans-serif; color: #fff; background: linear-gradient(135deg, var(--primaria), var(--primaria-escura)); text-decoration: none; cursor: pointer; box-shadow: 0 4px 12px rgba(29, 95, 174, .3); }
+  .botao.claro { background: #fff; color: var(--primaria); border: 1.5px solid var(--primaria); box-shadow: none; margin-top: 10px; }
+  h2 { margin: 0 0 10px; font-size: 15px; text-transform: uppercase; letter-spacing: .4px; color: var(--primaria-escura); }
+  ol { margin: 0; padding-left: 20px; }
+  li { margin: 6px 0; }
+  .suave { color: var(--suave); font-size: 14px; }
+  .aviso { background: #fdecea; color: #b3261e; border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <img src="icone-512.png" alt="">
+  <h1>Atividades AT-SUD</h1>
+  <p>Início e conclusão (RCO) das atividades de manutenção</p>
+</header>
+<main>
+  <div class="aviso" id="naoConfigurado" hidden>Página ainda sem o link do app: edite o arquivo index.html e cole o link que termina em /exec.</div>
+
+  <div class="cartao">
+    <a class="botao" id="abrir" href="#">Abrir o aplicativo</a>
+    <button class="botao claro" id="instalar" type="button" hidden>Instalar na tela inicial</button>
+  </div>
+
+  <div class="cartao">
+    <h2>Colocar o ícone na tela inicial</h2>
+    <p class="suave" id="dicaAndroid"><b>Android (Chrome):</b> toque nos <b>⋮</b> no canto superior direito e em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</p>
+    <p class="suave" id="dicaIphone"><b>iPhone (Safari):</b> toque em <b>Compartilhar</b> (quadrado com seta) e em <b>Adicionar à Tela de Início</b>.</p>
+    <p class="suave">Depois é só tocar no ícone: o aplicativo abre direto.</p>
+  </div>
+</main>
+<script>
+  document.getElementById('naoConfigurado').hidden = configurado;
+  var abrir = document.getElementById('abrir');
+  if (configurado) abrir.href = APP_URL; else abrir.removeAttribute('href');
+
+  // Chrome no Android: botão próprio para instalar
+  var pedido = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    pedido = e;
+    document.getElementById('instalar').hidden = false;
+  });
+  document.getElementById('instalar').addEventListener('click', function () {
+    if (!pedido) return;
+    pedido.prompt();
+    pedido.userChoice.then(function () { pedido = null; document.getElementById('instalar').hidden = true; });
+  });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+</script>
+</body>
+</html>
